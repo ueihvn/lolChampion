@@ -18,7 +18,9 @@ type Data struct {
 	Aatrox Aatrox `json:"Aatrox"`
 }
 
-type Aatrox struct {
+type Aatrox Champion
+
+type Champion struct {
 	ID     string    `json:"id"`
 	Title  string    `json:"title"`
 	Stats  BasicStat `json:"stats"`
@@ -40,8 +42,31 @@ type Spell struct {
 	Name string
 }
 
+func (s *Spell) SpellPrint() {
+	fmt.Printf("%s: %s\n", s.ID, s.Name)
+}
+
+func (bs *BasicStat) BasicStatPrint() {
+	fmt.Printf(
+		"HP/RegenHP: %12d/%d\nMP/RegenMP: %12d/%d\nArmor: %12d\nAttack damage: %12d\nAttack speed: %12d\n",
+		bs.HP, bs.HPregen,
+		bs.MP, bs.MPregen,
+		bs.Armor,
+		bs.Attackdamage,
+		bs.Attackspeed)
+}
+
+func (c *Champion) ChampionPrint() {
+	fmt.Printf("%s - %v", c.ID, c.Title)
+	c.Stats.BasicStatPrint()
+
+	for _, v := range c.Spells {
+		v.SpellPrint()
+	}
+}
+
 func EncodingChampionJSON() {
-	response, err := http.Get("https://ddragon.leagueoflegends.com/cdn/11.6.1/data/vn_VN/champion/Aatrox.json")
+	response, err := http.Get("https://ddragon.leagueoflegends.com/cdn/11.6.1/data/en_US/champion/Aatrox.json")
 	if err != nil {
 		log.Fatalf("%+v\n", err)
 		os.Exit(1)
@@ -55,5 +80,5 @@ func EncodingChampionJSON() {
 	var responeObject Response
 	json.Unmarshal(data, &responeObject)
 
-	fmt.Println(responeObject.Data.Aatrox)
+	responeObject.Data.Aatrox.Stats.BasicStatPrint()
 }
