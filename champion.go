@@ -15,10 +15,8 @@ type Response struct {
 }
 
 type Data struct {
-	Aatrox Aatrox `json:"Aatrox"`
+	Aatrox Champion `json:"Aatrox"`
 }
-
-type Aatrox Champion
 
 type Champion struct {
 	ID     string    `json:"id"`
@@ -57,7 +55,7 @@ func (bs *BasicStat) BasicStatPrint() {
 }
 
 func (c *Champion) ChampionPrint() {
-	fmt.Printf("%s - %v", c.ID, c.Title)
+	fmt.Printf("%s - %v\n", c.ID, c.Title)
 	c.Stats.BasicStatPrint()
 
 	for _, v := range c.Spells {
@@ -80,5 +78,5 @@ func EncodingChampionJSON() {
 	var responeObject Response
 	json.Unmarshal(data, &responeObject)
 
-	responeObject.Data.Aatrox.Stats.BasicStatPrint()
+	responeObject.Data.Aatrox.ChampionPrint()
 }
